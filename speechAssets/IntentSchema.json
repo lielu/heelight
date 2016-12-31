@@ -1,0 +1,19 @@
+{
+  "intents": [
+    {
+      "intent": “TurnOn”
+    },
+    {
+      "intent": “TurnOff”
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    }
+  ]
+}
