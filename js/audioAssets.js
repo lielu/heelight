@@ -3,12 +3,20 @@
 // Audio Source
 var audioData = [
     {
-        'title' : 'Turn on',
+        'title' : 'On',
         'url' : 'https://s3.amazonaws.com/aws-website-lielu-4nbti/40.wav'
     },
     {
-        'title' : 'Turn off',
+        'title' : 'Off',
         'url' : 'https://s3.amazonaws.com/aws-website-lielu-4nbti/40.wav'
+    }
+    {
+        'title' : 'Natural Light',
+        'url' : 'https://s3.amazonaws.com/aws-website-lielu-4nbti/29.wav'
+    }
+    {
+        'title' : 'Night Light',
+        'url' : 'https://s3.amazonaws.com/aws-website-lielu-4nbti/17.wav'
     }
 ];
 

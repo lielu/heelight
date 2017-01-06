@@ -2,3 +2,9 @@ TurnOn turn on
 TurnOn to turn on
 TurnOff turn off
 TurnOff to turn off
+NaturalLight turn natural light
+NaturalLight to turn natural light
+NaturalLight natural light
+NightLight turn night light
+NightLight to turn night light
+NightLight night light

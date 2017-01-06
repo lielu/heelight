@@ -7,6 +7,12 @@
       "intent": “TurnOff”
     },
     {
+      "intent": “NaturalLight”
+    },
+    {
+      "intent": “NightLight”
+    },
+    {
       "intent": "AMAZON.HelpIntent"
     },
     {

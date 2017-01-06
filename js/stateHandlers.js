@@ -47,6 +47,7 @@ var stateHandlers = {
             this.attributes['loop'] = false;
             this.attributes['shuffle'] = false;
             this.attributes['playbackIndexChanged'] = true;
+            this.attributes['playbackFinished'] = false;
             //  Change state to START_MODE
             this.handler.state = constants.states.START_MODE;
             
@@ -59,6 +60,33 @@ var stateHandlers = {
             this.attributes['loop'] = false;
             this.attributes['shuffle'] = false;
             this.attributes['playbackIndexChanged'] = true;
+            this.attributes['playbackFinished'] = false;
+            //  Change state to START_MODE
+            this.handler.state = constants.states.START_MODE;
+            
+            controller.play.call(this);
+        },
+        'NaturalNight' : function () {
+            this.attributes['playOrder'] = Array.apply(null, {length: audioData.length}).map(Number.call, Number);
+            this.attributes['index'] = 2;
+            this.attributes['offsetInMilliseconds'] = 0;
+            this.attributes['loop'] = false;
+            this.attributes['shuffle'] = false;
+            this.attributes['playbackIndexChanged'] = true;
+            this.attributes['playbackFinished'] = false;
+            //  Change state to START_MODE
+            this.handler.state = constants.states.START_MODE;
+            
+            controller.play.call(this);
+        },
+        'NightLight' : function () {
+            this.attributes['playOrder'] = Array.apply(null, {length: audioData.length}).map(Number.call, Number);
+            this.attributes['index'] = 3;
+            this.attributes['offsetInMilliseconds'] = 0;
+            this.attributes['loop'] = false;
+            this.attributes['shuffle'] = false;
+            this.attributes['playbackIndexChanged'] = true;
+            this.attributes['playbackFinished'] = false;
             //  Change state to START_MODE
             this.handler.state = constants.states.START_MODE;
             
@@ -83,7 +111,7 @@ var stateHandlers = {
             // No session ended logic
         },
         'Unhandled' : function () {
-            var message = 'Sorry, I could not understand. Please say turn on or turn off.';
+            var message = 'Sorry, I could not understand. Please say turn on, turn off, natural light, or night light.';
             this.response.speak(message).listen(message);
             this.emit(':responseReady');
         }
@@ -106,32 +134,27 @@ var stateHandlers = {
             var reprompt;
             if (this.attributes['playbackFinished']) {
                 this.handler.state = constants.states.START_MODE;
-                message = 'Welcome to He Light. You can say, turn on, to turn on the light, or, turn off, to turn off the light.';
-                reprompt = 'You can say, turn on, to turn on the light, or, turn off, to turn off the light.';
+                message = 'Welcome to He Light. You can say, turn on, turn off, natural light, or night light to control the light.';
+                reprompt = 'You can say, turn on, turn off, natural light, or night light to control the light.';
             } else {
                 this.handler.state = constants.states.RESUME_DECISION_MODE;
-                message = 'You were listening to ' + audioData[this.attributes['playOrder'][this.attributes['index']]].title +
+                message = 'You were trying to turn' + audioData[this.attributes['playOrder'][this.attributes['index']]].title +
                     ' Would you like to resume?';
-                reprompt = 'You can say yes to resume or no to play from the top.';
+                reprompt = 'You can say yes to resume or no to stop.';
             }
 
             this.response.speak(message).listen(reprompt);
             this.emit(':responseReady');
         },
-        'PlayAudio' : function () { controller.play.call(this) },
+        // 'PlayAudio' : function () { controller.play.call(this) },
         'TurnOn' : function () { controller.turnOn.call(this) },
         'TurnOff' : function () { controller.turnOff.call(this) },
-        'AMAZON.NextIntent' : function () { controller.playNext.call(this) },
-        'AMAZON.PreviousIntent' : function () { controller.playPrevious.call(this) },
+        'NaturalLight' : function () { controller.naturalLight.call(this) },
+        'NightLight' : function () { controller.nightLight.call(this) },
         'AMAZON.PauseIntent' : function () { controller.stop.call(this) },
         'AMAZON.StopIntent' : function () { controller.stop.call(this) },
         'AMAZON.CancelIntent' : function () { controller.stop.call(this) },
         'AMAZON.ResumeIntent' : function () { controller.play.call(this) },
-        'AMAZON.LoopOnIntent' : function () { controller.loopOn.call(this) },
-        'AMAZON.LoopOffIntent' : function () { controller.loopOff.call(this) },
-        'AMAZON.ShuffleOnIntent' : function () { controller.shuffleOn.call(this) },
-        'AMAZON.ShuffleOffIntent' : function () { controller.shuffleOff.call(this) },
-        'AMAZON.StartOverIntent' : function () { controller.startOver.call(this) },
         'AMAZON.HelpIntent' : function () {
             // This will called while audio is playing and a user says "ask <invocation_name> for help"
             var message = 'You can say, turn on, to turn on the light, or, turn off, to turn off the light.';
@@ -210,13 +233,13 @@ var controller = function () {
              */
             this.handler.state = constants.states.PLAY_MODE;
 
-            if (this.attributes['playbackFinished']) {
-                // Reset to top of the playlist when reached end.
-                this.attributes['index'] = 0;
-                this.attributes['offsetInMilliseconds'] = 0;
-                this.attributes['playbackIndexChanged'] = true;
-                this.attributes['playbackFinished'] = false;
-            }
+//            if (this.attributes['playbackFinished']) {
+//                // Reset to top of the playlist when reached end.
+//                this.attributes['index'] = 0;
+//                this.attributes['offsetInMilliseconds'] = 0;
+//                this.attributes['playbackIndexChanged'] = true;
+//                this.attributes['playbackFinished'] = false;
+//            }
 
             var token = String(this.attributes['playOrder'][this.attributes['index']]);
             var playBehavior = 'REPLACE_ALL';
@@ -242,13 +265,10 @@ var controller = function () {
              */
             this.handler.state = constants.states.PLAY_MODE;
 
-            if (this.attributes['playbackFinished']) {
-                // Reset to top of the playlist when reached end.
-                this.attributes['index'] = 0;
-                this.attributes['offsetInMilliseconds'] = 0;
-                this.attributes['playbackIndexChanged'] = true;
-                this.attributes['playbackFinished'] = false;
-            }
+            this.attributes['index'] = 0;
+            this.attributes['offsetInMilliseconds'] = 0;
+            this.attributes['playbackIndexChanged'] = true;
+            this.attributes['playbackFinished'] = false;
 
             var token = String(this.attributes['playOrder'][this.attributes['index']]);
             var playBehavior = 'REPLACE_ALL';
@@ -273,13 +293,10 @@ var controller = function () {
              */
             this.handler.state = constants.states.PLAY_MODE;
 
-            if (this.attributes['playbackFinished']) {
-                // Reset to top of the playlist when reached end.
-                this.attributes['index'] = 1;
-                this.attributes['offsetInMilliseconds'] = 0;
-                this.attributes['playbackIndexChanged'] = true;
-                this.attributes['playbackFinished'] = false;
-            }
+            this.attributes['index'] = 1;
+            this.attributes['offsetInMilliseconds'] = 0;
+            this.attributes['playbackIndexChanged'] = true;
+            this.attributes['playbackFinished'] = false;
 
             var token = String(this.attributes['playOrder'][this.attributes['index']]);
             var playBehavior = 'REPLACE_ALL';
@@ -291,6 +308,62 @@ var controller = function () {
             if (canThrowCard.call(this)) {
                 var cardTitle = 'Heelight';
                 var cardContent = 'Heelight is turned off';
+                this.response.cardRenderer(cardTitle, cardContent, null);
+            }
+
+            this.response.audioPlayerPlay(playBehavior, podcast.url, token, null, offsetInMilliseconds);
+            this.emit(':responseReady');
+        },
+        naturalLight: function () {
+            /*
+             *  Using the function to begin playing audio for turning heelight to natural light when:
+             *      Natural Light intent invoked.
+             */
+            this.handler.state = constants.states.PLAY_MODE;
+
+            this.attributes['index'] = 2;
+            this.attributes['offsetInMilliseconds'] = 0;
+            this.attributes['playbackIndexChanged'] = true;
+            this.attributes['playbackFinished'] = false;
+
+            var token = String(this.attributes['playOrder'][this.attributes['index']]);
+            var playBehavior = 'REPLACE_ALL';
+            var podcast = audioData[this.attributes['playOrder'][this.attributes['index']]];
+            var offsetInMilliseconds = this.attributes['offsetInMilliseconds'];
+            // Since play behavior is REPLACE_ALL, enqueuedToken attribute need to be set to null.
+            this.attributes['enqueuedToken'] = null;
+
+            if (canThrowCard.call(this)) {
+                var cardTitle = 'Heelight';
+                var cardContent = 'Heelight is turned natural light';
+                this.response.cardRenderer(cardTitle, cardContent, null);
+            }
+
+            this.response.audioPlayerPlay(playBehavior, podcast.url, token, null, offsetInMilliseconds);
+            this.emit(':responseReady');
+        },
+        nightLight: function () {
+            /*
+             *  Using the function to begin playing audio for turning heelight to night light when:
+             *      Night Light intent invoked.
+             */
+            this.handler.state = constants.states.PLAY_MODE;
+
+            this.attributes['index'] = 3;
+            this.attributes['offsetInMilliseconds'] = 0;
+            this.attributes['playbackIndexChanged'] = true;
+            this.attributes['playbackFinished'] = false;
+
+            var token = String(this.attributes['playOrder'][this.attributes['index']]);
+            var playBehavior = 'REPLACE_ALL';
+            var podcast = audioData[this.attributes['playOrder'][this.attributes['index']]];
+            var offsetInMilliseconds = this.attributes['offsetInMilliseconds'];
+            // Since play behavior is REPLACE_ALL, enqueuedToken attribute need to be set to null.
+            this.attributes['enqueuedToken'] = null;
+
+            if (canThrowCard.call(this)) {
+                var cardTitle = 'Heelight';
+                var cardContent = 'Heelight is turned night light';
                 this.response.cardRenderer(cardTitle, cardContent, null);
             }
 
