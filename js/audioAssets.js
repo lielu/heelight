@@ -17,6 +17,10 @@ var audioData = [
     {
         'title' : 'Night Light',
         'url' : 'https://s3.amazonaws.com/aws-website-lielu-4nbti/17.wav'
+    },
+    {
+        'title' : 'Sunset',
+        'url' : 'https://s3.amazonaws.com/aws-website-lielu-4nbti/25.wav'
     }
 ];
 
